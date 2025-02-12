@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+@theme {
+  --color-orange-primary: oklch(71.24% 0.1848 37.77);
+  --font-welcome: "Lobster", serif;
+  --font-input: "Poppins", serif;
+}
