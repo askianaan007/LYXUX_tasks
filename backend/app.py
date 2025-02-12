@@ -6,14 +6,14 @@ from config import Config
 from models.user_model import mongo
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:5174"])
 app.config.from_object(Config)
 
 jwt = JWTManager(app)
 
 mongo.init_app(app)
 
-try:
+try:  
     mongo.db.command("ping")
     print("✅ MongoDB connected successfully")
 except Exception as e:

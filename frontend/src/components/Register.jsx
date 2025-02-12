@@ -1,39 +1,38 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link, data } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 const Register = () => {
-  const [name, setName] = useState("");
+  const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmpassword, setConfirmpassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (password !== confirmpassword) {
       toast.error("Passwords do not match");
       return;
     }
 
     try {
-      const response = await axios.post("/auth/register", {
-        name,
+      const response = await axios.post("http://127.0.0.1:5000/auth/register", {
+        fullname,
         email,
         password,
+        confirmpassword,
       });
 
+      toast.success(response.data.message);
       if (response.data.access_token) {
         localStorage.setItem("authToken", response.data.access_token);
         navigate("/dashboard");
-      } else {
-        toast.error("Registration failed. Please try again.");
       }
     } catch (error) {
-      toast.error("Error registering the user");
+      toast.error(error.response.data.error);
     }
   };
 
@@ -45,14 +44,12 @@ const Register = () => {
       </p>
       <div className="mt-8">
         <form onSubmit={handleSubmit}>
-          {" "}
-          {/* Move the onSubmit to the form */}
           <fieldset className="p-0 ">
             <p className="text-sm font-input font-light">Full Name</p>
             <label className="input rounded-xl w-full">
               <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={fullname}
+                onChange={(e) => setFullname(e.target.value)}
                 type="text"
                 placeholder="Enter Your Full Name"
               />
@@ -165,8 +162,8 @@ const Register = () => {
                 minLength="8"
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmpassword}
+                onChange={(e) => setConfirmpassword(e.target.value)}
               />
             </label>
             <p className="validator-hint hidden">
